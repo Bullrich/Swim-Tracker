@@ -54,7 +54,7 @@ class Persistence {
     });
   }
 
-  Future<void> deleteTrack(int time) async {
+  Future<void> deleteTrack(SwimRecord record) async {
     // Get a reference to the database.
     final db = await getDatabase();
 
@@ -62,9 +62,9 @@ class Persistence {
     await db.delete(
       _databaseName,
       // Use a `where` clause to delete a specific dog.
-      where: "id = ?",
+      where: "time = ?",
       // Pass the Dog's id as a whereArg to prevent SQL injection.
-      whereArgs: [time],
+      whereArgs: [record.time],
     );
   }
 }

@@ -6,3 +6,4 @@ const Color kInactiveCardColour = Color(0xFF111328);
 const Color kBottomContainerColour = Color(0xFFEB1555);
 
 const Color kButtonColor = Color(0xFF15D1E0);
+const Color kCancelColor = Color(0xFFF77973);
