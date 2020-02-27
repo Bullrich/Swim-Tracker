@@ -18,7 +18,7 @@ class _TrackScreenState extends State<TrackScreen> {
   void getAllRecords() async {
     final newRecords = await Persistence().records();
     setState(() {
-      records = newRecords;
+      records = newRecords.reversed.toList();
     });
   }
 
@@ -109,18 +109,17 @@ class _TrackScreenState extends State<TrackScreen> {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 15),
         child: FloatingActionButton(
-          onPressed: () {
-            showModalBottomSheet(
+          onPressed: () async {
+            await showModalBottomSheet(
                 context: context,
                 builder: (context) {
                   return RoundedModal(
                     colour: kActiveCardColour,
-                    child: TrackAdder(
-                      initialLaps: 3,
-                      initialLength: 10,
-                    ),
+                    child: TrackAdder(),
                   );
-                });
+                },
+            );
+            getAllRecords();
           },
           backgroundColor: kButtonColor,
           child: Icon(

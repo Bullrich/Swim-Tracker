@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swimm_tracker/constants.dart';
 import 'package:swimm_tracker/models/swim_record.dart';
 import 'package:swimm_tracker/services/persistence.dart';
@@ -6,15 +7,10 @@ import 'package:swimm_tracker/services/persistence.dart';
 import 'name_number_picker.dart';
 
 class TrackAdder extends StatefulWidget {
-  final int initialLaps;
-  final int initialLength;
-
-  const TrackAdder({this.initialLaps, this.initialLength});
-
   @override
   _TrackAdderState createState() => _TrackAdderState(
-        laps: initialLaps,
-        length: initialLength,
+        laps: 15,
+        length: 10,
       );
 }
 
@@ -23,6 +19,27 @@ class _TrackAdderState extends State<TrackAdder> {
   int length;
 
   _TrackAdderState({this.laps, this.length});
+
+  void getLastValues() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      laps = prefs.getInt("laps") ?? 1;
+      length = prefs.getInt("length") ?? 10;
+      print("Last values were $laps and $length");
+    });
+  }
+
+  Future setNewLastValues(int laps, int length) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt("laps", laps);
+    prefs.setInt("length", length);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getLastValues();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +66,11 @@ class _TrackAdderState extends State<TrackAdder> {
               minValue: 1,
               maxValue: 100,
               onChange: (newVal) {
-                setState(() {
-                  laps = newVal;
-                });
+                setState(
+                  () {
+                    laps = newVal;
+                  },
+                );
               },
             ),
             NamedNumberPicker(
@@ -77,7 +96,8 @@ class _TrackAdderState extends State<TrackAdder> {
                   laps: laps,
                   length: length,
                   time: DateTime.now().millisecondsSinceEpoch);
-//              await Persistence().insertRecord(record);
+              await Persistence().insertRecord(record);
+              await setNewLastValues(laps, length);
               Navigator.pop(context);
             },
             elevation: 6,
