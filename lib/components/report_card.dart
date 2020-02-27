@@ -6,8 +6,12 @@ class ReportCard extends StatelessWidget {
   const ReportCard({this.title, this.laps, this.meters});
 
   final String title;
-  final int laps;
-  final int meters;
+  final double laps;
+  final double meters;
+
+  String removeDecimalZeroFormat(double n) {
+    return n.toStringAsFixed(n.truncateToDouble() == n ? 0 : 1);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +27,16 @@ class ReportCard extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Text(
-              laps.toString(),
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              removeDecimalZeroFormat(laps),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             Text(
               "Laps",
             ),
             SizedBox(height: 5),
             Text(
-              meters.toString(),
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              removeDecimalZeroFormat(meters),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             Text("meters"),
           ],

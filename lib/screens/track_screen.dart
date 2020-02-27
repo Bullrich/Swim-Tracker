@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:swimm_tracker/components/record_list.dart';
 import 'package:swimm_tracker/components/report_card.dart';
+import 'package:swimm_tracker/components/report_section.dart';
 import 'package:swimm_tracker/components/rounder_modal.dart';
 import 'package:swimm_tracker/components/track_adder.dart';
 import 'package:swimm_tracker/constants.dart';
@@ -65,33 +66,8 @@ class _TrackScreenState extends State<TrackScreen> {
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
-                      children: <Widget>[
-                        Expanded(
-                          child: ReportCard(
-                            title: "Daily",
-                            meters: 12,
-                            laps: 4,
-                          ),
-                        ),
-                        Expanded(
-                          child: ReportCard(
-                            title: "Weekly",
-                            meters: 1220,
-                            laps: 4,
-                          ),
-                        ),
-                        Expanded(
-                          child: ReportCard(
-                            title: "Total",
-                            meters: 15000,
-                            laps: 4,
-                          ),
-                        ),
-                      ],
+                    ReportSection(
+                      records: records,
                     ),
                     SizedBox(
                       height: 500,
@@ -111,13 +87,13 @@ class _TrackScreenState extends State<TrackScreen> {
         child: FloatingActionButton(
           onPressed: () async {
             await showModalBottomSheet(
-                context: context,
-                builder: (context) {
-                  return RoundedModal(
-                    colour: kActiveCardColour,
-                    child: TrackAdder(),
-                  );
-                },
+              context: context,
+              builder: (context) {
+                return RoundedModal(
+                  colour: kActiveCardColour,
+                  child: TrackAdder(),
+                );
+              },
             );
             getAllRecords();
           },
