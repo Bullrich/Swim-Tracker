@@ -24,9 +24,23 @@ class RecordList extends StatelessWidget {
       )
     ];
 
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = DateTime(now.year, now.month, now.day - 1);
+
     for (var i = 0; i < records.length; i++) {
       final record = records[i];
       final date = DateTime.fromMillisecondsSinceEpoch(record.time);
+      final dateAbs = DateTime(date.year, date.month, date.day);
+
+      final String dateText = (dateAbs == today)
+          ? "Today"
+          : (dateAbs == yesterday)
+              ? "Yesterday"
+              : dateAbs.difference(today).inDays < 7
+                  ? DateFormat('EEEE').format(dateAbs)
+                  : DateFormat('MMMd').format(dateAbs);
+
       final container = ReusableCard(
         colour: kActiveCardColour,
         cardChild: Dismissible(
@@ -42,7 +56,7 @@ class RecordList extends StatelessWidget {
               children: <Widget>[
                 Text("${record.laps} laps"),
                 Text("${(record.length * record.laps).toString()} meters"),
-                Text(DateFormat('EEEE').format(date)),
+                Text(dateText),
               ],
             ),
           ),
