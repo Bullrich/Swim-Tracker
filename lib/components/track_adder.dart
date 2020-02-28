@@ -7,10 +7,15 @@ import 'package:swimm_tracker/services/persistence.dart';
 import 'name_number_picker.dart';
 
 class TrackAdder extends StatefulWidget {
+  final int laps;
+  final int length;
+
+  const TrackAdder({this.laps, this.length});
+
   @override
   _TrackAdderState createState() => _TrackAdderState(
-        laps: 15,
-        length: 10,
+        laps: laps,
+        length: length,
       );
 }
 
@@ -19,15 +24,6 @@ class _TrackAdderState extends State<TrackAdder> {
   int length;
 
   _TrackAdderState({this.laps, this.length});
-
-  void getLastValues() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      laps = prefs.getInt("laps") ?? 1;
-      length = prefs.getInt("length") ?? 10;
-      print("Last values were $laps and $length");
-    });
-  }
 
   Future setNewLastValues(int laps, int length) async {
     final prefs = await SharedPreferences.getInstance();
@@ -38,7 +34,6 @@ class _TrackAdderState extends State<TrackAdder> {
   @override
   void initState() {
     super.initState();
-    getLastValues();
   }
 
   @override

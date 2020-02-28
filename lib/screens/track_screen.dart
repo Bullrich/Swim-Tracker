@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swimm_tracker/components/record_list.dart';
 import 'package:swimm_tracker/components/report_card.dart';
 import 'package:swimm_tracker/components/report_section.dart';
@@ -73,6 +74,9 @@ class _TrackScreenState extends State<TrackScreen> {
                       height: 500,
                       child: RecordList(
                         records: records,
+                        onDeleted: () {
+                          getAllRecords();
+                        },
                       ),
                     )
                   ],
@@ -86,12 +90,19 @@ class _TrackScreenState extends State<TrackScreen> {
         padding: const EdgeInsets.only(bottom: 15),
         child: FloatingActionButton(
           onPressed: () async {
+            final prefs = await SharedPreferences.getInstance();
+            final laps = prefs.getInt("laps") ?? 1;
+            final length = prefs.getInt("length") ?? 10;
+
             await showModalBottomSheet(
               context: context,
               builder: (context) {
                 return RoundedModal(
                   colour: kActiveCardColour,
-                  child: TrackAdder(),
+                  child: TrackAdder(
+                    laps: laps,
+                    length: length,
+                  ),
                 );
               },
             );

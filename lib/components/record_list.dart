@@ -8,8 +8,9 @@ import 'package:swimm_tracker/services/persistence.dart';
 
 class RecordList extends StatelessWidget {
   final List<SwimRecord> records;
+  final Function onDeleted;
 
-  RecordList({@required this.records});
+  RecordList({@required this.records, this.onDeleted});
 
   List<Widget> parseRecords(BuildContext context) {
     List<Widget> widgets = [
@@ -46,7 +47,10 @@ class RecordList extends StatelessWidget {
         cardChild: Dismissible(
           key: ValueKey(record.time),
           background: Container(
-            color: kCancelColor,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: kCancelColor,
+            ),
           ),
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
@@ -62,6 +66,7 @@ class RecordList extends StatelessWidget {
           ),
           onDismissed: (DismissDirection dir) {
             Persistence().deleteTrack(record);
+            onDeleted();
           },
           confirmDismiss: (direction) async {
             final bool response = await showDialog(
