@@ -16,8 +16,8 @@ void main() {
     await tester.pumpWidget(MyApp());
 
     // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.text('Average'), findsOneWidget);
+    expect(find.text('Laps'), findsNothing);
 
     // Tap the '+' icon and trigger a frame.
     await tester.tap(find.byIcon(Icons.add));
@@ -25,6 +25,6 @@ void main() {
 
     // Verify that our counter has incremented.
     expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('Laps'), findsOneWidget);
   });
 }

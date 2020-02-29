@@ -56,8 +56,9 @@ class _TrackScreenState extends State<TrackScreen> {
         child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Container(
+              SafeArea(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
@@ -70,14 +71,11 @@ class _TrackScreenState extends State<TrackScreen> {
                     ReportSection(
                       records: records,
                     ),
-                    SizedBox(
-                      height: 500,
-                      child: RecordList(
-                        records: records,
-                        onDeleted: () {
-                          getAllRecords();
-                        },
-                      ),
+                    RecordList(
+                      records: records,
+                      onDeleted: () {
+                        getAllRecords();
+                      },
                     )
                   ],
                 ),

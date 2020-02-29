@@ -16,7 +16,6 @@ class ReportSection extends StatelessWidget {
     _dailySwam = SwimReport(
         laps: (_totalSwam.laps / this.records.length),
         meters: (_totalSwam.meters / this.records.length));
-    print("Daily: laps: ${_totalSwam.laps} / ${this.records.length}=${_dailySwam.laps} | meters: ${(_totalSwam.meters * _totalSwam.laps)} / ${this.records.length}=${_dailySwam.meters}");
   }
 
   final List<SwimRecord> records;

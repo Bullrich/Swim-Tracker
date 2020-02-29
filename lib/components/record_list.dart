@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:swimm_tracker/components/alert_popup.dart';
+import 'package:swimm_tracker/components/record_modification.dart';
 import 'package:swimm_tracker/components/reusable_card.dart';
+import 'package:swimm_tracker/routes/scale_route.dart';
 import 'package:swimm_tracker/constants.dart';
 import 'package:swimm_tracker/models/swim_record.dart';
 import 'package:swimm_tracker/services/persistence.dart';
 
-class RecordList extends StatelessWidget {
+class RecordList extends StatefulWidget {
   final List<SwimRecord> records;
   final Function onDeleted;
 
   RecordList({@required this.records, this.onDeleted});
+
+  @override
+  _RecordListState createState() => _RecordListState();
+}
+
+class _RecordListState extends State<RecordList> {
+  SwimRecord currentRecordToModify;
 
   List<Widget> parseRecords(BuildContext context) {
     List<Widget> widgets = [
@@ -29,8 +38,8 @@ class RecordList extends StatelessWidget {
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = DateTime(now.year, now.month, now.day - 1);
 
-    for (var i = 0; i < records.length; i++) {
-      final record = records[i];
+    for (var i = 0; i < widget.records.length; i++) {
+      final record = widget.records[i];
       final date = DateTime.fromMillisecondsSinceEpoch(record.time);
       final dateAbs = DateTime(date.year, date.month, date.day);
 
@@ -47,10 +56,21 @@ class RecordList extends StatelessWidget {
         cardChild: Dismissible(
           key: ValueKey(record.time),
           background: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: kCancelColor,
+              ),
+              alignment: Alignment.centerLeft,
+              child: Icon(Icons.delete),
+              padding: EdgeInsets.only(left: 10)),
+          secondaryBackground: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: kCancelColor,
+              color: Colors.orange,
             ),
+            alignment: Alignment.centerRight,
+            child: Icon(Icons.edit),
+            padding: EdgeInsets.only(right: 10),
           ),
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
@@ -66,9 +86,16 @@ class RecordList extends StatelessWidget {
           ),
           onDismissed: (DismissDirection dir) {
             Persistence().deleteTrack(record);
-            onDeleted();
+            widget.onDeleted();
           },
           confirmDismiss: (direction) async {
+            if (direction == DismissDirection.endToStart) {
+              setState(() {
+                currentRecordToModify = record;
+              });
+              return false;
+            }
+
             final bool response = await showDialog(
               context: context,
               builder: (BuildContext context) {
@@ -94,13 +121,37 @@ class RecordList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("I have ${records.length} records!");
     return Container(
-      child: ListView(
-        padding: const EdgeInsets.all(8),
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-        children: parseRecords(context),
+      child: AnimatedSwitcher(
+        duration: Duration(milliseconds: 500),
+        transitionBuilder: (Widget child, Animation<double> animation) =>
+            ScaleTransition(
+          child: child,
+          scale: animation,
+        ),
+        child: currentRecordToModify != null
+            ? RecordModification(
+                record: currentRecordToModify,
+                onSave: () {
+                  setState(() {
+                    currentRecordToModify = null;
+                  });
+                },
+                onDiscard: () {
+                  setState(() {
+                    currentRecordToModify = null;
+                  });
+                },
+              )
+            : Container(
+                height: 500,
+                child: ListView(
+                  padding: const EdgeInsets.all(8),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  children: parseRecords(context),
+                ),
+              ),
       ),
     );
   }
