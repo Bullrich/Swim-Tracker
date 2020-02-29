@@ -83,8 +83,8 @@ class _RecordModificationState extends State<RecordModification> {
             ),
             Text(
               "Date",
-              style:
-                  TextStyle(fontWeight: FontWeight.w700, height: 2, fontSize: 25),
+              style: TextStyle(
+                  fontWeight: FontWeight.w700, height: 2, fontSize: 25),
               textAlign: TextAlign.center,
             ),
             Row(
@@ -131,7 +131,12 @@ class _RecordModificationState extends State<RecordModification> {
                   color: Colors.lightGreen,
                   child: Icon(Icons.check),
                   onPressed: () {
-                    widget.onSave();
+                    final record = SwimRecord(
+                        laps: laps,
+                        length: length,
+                        time: recordDate.millisecondsSinceEpoch,
+                        id: widget.record.id);
+                    widget.onSave(record);
                   },
                 ),
                 MaterialButton(

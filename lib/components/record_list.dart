@@ -47,7 +47,7 @@ class _RecordListState extends State<RecordList> {
           ? "Today"
           : (dateAbs == yesterday)
               ? "Yesterday"
-              : dateAbs.difference(today).inDays < 7
+              : dateAbs.difference(today).inDays > -7
                   ? DateFormat('EEEE').format(dateAbs)
                   : DateFormat('MMMd').format(dateAbs);
 
@@ -132,9 +132,11 @@ class _RecordListState extends State<RecordList> {
         child: currentRecordToModify != null
             ? RecordModification(
                 record: currentRecordToModify,
-                onSave: () {
+                onSave: (record) async {
+                  await Persistence().updateTrack(record);
                   setState(() {
                     currentRecordToModify = null;
+                    widget.onDeleted();
                   });
                 },
                 onDiscard: () {

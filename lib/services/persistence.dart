@@ -8,12 +8,12 @@ class Persistence {
   Future<Database> getDatabase() async {
     return openDatabase(
       // Set the path to the database.
-      join(await getDatabasesPath(), 'doggie_database.db'),
+      join(await getDatabasesPath(), 'swim_database.db'),
       // When the database is first created, create a table to store dogs.
       onCreate: (db, version) {
         // Run the CREATE TABLE statement on the database.
         return db.execute(
-          "CREATE TABLE $_databaseName(time INTEGER PRIMARY KEY, length INTEGER, laps INTEGER)",
+          "CREATE TABLE $_databaseName(id INTEGER PRIMARY KEY AUTOINCREMENT, time INTEGER, length INTEGER, laps INTEGER)",
         );
       },
       // Set the version. This executes the onCreate function and provides a
@@ -50,6 +50,7 @@ class Persistence {
         time: maps[i]['time'],
         laps: maps[i]['laps'],
         length: maps[i]['length'],
+        id: maps[i]['id'],
       );
     });
   }
@@ -58,13 +59,28 @@ class Persistence {
     // Get a reference to the database.
     final db = await getDatabase();
 
-    // Remove the Dog from the Database.
+    // Remove the record from the Database.
     await db.delete(
       _databaseName,
-      // Use a `where` clause to delete a specific dog.
-      where: "time = ?",
-      // Pass the Dog's id as a whereArg to prevent SQL injection.
-      whereArgs: [record.time],
+      // Use a `where` clause to delete a specific record.
+      where: "id = ?",
+      // Pass the record's id as a whereArg to prevent SQL injection.
+      whereArgs: [record.id],
+    );
+  }
+
+  Future<void> updateTrack(SwimRecord record) async {
+    // Get a reference to the database.
+    final db = await getDatabase();
+
+    final recordMap = record.toMap();
+    recordMap["id"] = record.id;
+
+    await db.update(
+      _databaseName,
+      recordMap,
+      where: "id = ?",
+      whereArgs: [record.id],
     );
   }
 }
