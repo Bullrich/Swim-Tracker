@@ -3,24 +3,37 @@ import 'package:swimm_tracker/components/report_card.dart';
 import 'package:swimm_tracker/models/swim_record.dart';
 
 class ReportSection extends StatelessWidget {
-  ReportSection({@required this.records}) {
-    if(records == null || records.length == 0){
-      return;
+  ReportSection({@required this.records})
+      : _totalSwam = generateTotalSwamReport(records),
+        _dailySwam = generateAverageSwamReport(records);
+
+  static SwimReport generateTotalSwamReport(List<SwimRecord> records) {
+    if (records == null || records.length == 0) {
+      return null;
+    }
+    return SwimReport(
+        laps: records.map((s) => s.laps).reduce((a, b) => a + b).toDouble(),
+        meters: records
+            .map((s) => s.length * s.laps)
+            .reduce((a, b) => a + b)
+            .toDouble());
+  }
+
+  static SwimReport generateAverageSwamReport(List<SwimRecord> records) {
+    final totalSwam = generateTotalSwamReport(records);
+
+    if (totalSwam == null) {
+      return null;
     }
 
-    _totalSwam = SwimReport(
-        laps:
-            this.records.map((s) => s.laps).reduce((a, b) => a + b).toDouble(),
-        meters:
-            this.records.map((s) => s.length * s.laps).reduce((a, b) => a + b).toDouble());
-    _dailySwam = SwimReport(
-        laps: (_totalSwam.laps / this.records.length),
-        meters: (_totalSwam.meters / this.records.length));
+    return SwimReport(
+        laps: (totalSwam.laps / records.length),
+        meters: (totalSwam.meters / records.length));
   }
 
   final List<SwimRecord> records;
-  SwimReport _totalSwam;
-  SwimReport _dailySwam;
+  final SwimReport _totalSwam;
+  final SwimReport _dailySwam;
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swimm_tracker/components/record_list.dart';
-import 'package:swimm_tracker/components/report_card.dart';
 import 'package:swimm_tracker/components/report_section.dart';
 import 'package:swimm_tracker/components/rounder_modal.dart';
 import 'package:swimm_tracker/components/track_adder.dart';
@@ -52,32 +51,26 @@ class _TrackScreenState extends State<TrackScreen> {
         title: Text("Swim Tracker"),
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 25),
+        padding: EdgeInsets.only(left: 25, right: 25, bottom: 90),
         child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              SafeArea(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Text(
-                      "Average",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
-                    ),
-                    ReportSection(
-                      records: records,
-                    ),
-                    RecordList(
-                      records: records,
-                      onDeleted: () {
-                        getAllRecords();
-                      },
-                    )
-                  ],
+              Text(
+                "Stats",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+              ReportSection(
+                records: records,
+              ),
+              Expanded(
+                child: RecordList(
+                  records: records,
+                  onDeleted: () {
+                    getAllRecords();
+                  },
                 ),
               )
             ],

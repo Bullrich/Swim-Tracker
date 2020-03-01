@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:swimm_tracker/components/alert_popup.dart';
 import 'package:swimm_tracker/components/record_modification.dart';
 import 'package:swimm_tracker/components/reusable_card.dart';
-import 'package:swimm_tracker/routes/scale_route.dart';
+import 'package:swimm_tracker/components/rounder_modal.dart';
 import 'package:swimm_tracker/constants.dart';
 import 'package:swimm_tracker/models/swim_record.dart';
 import 'package:swimm_tracker/services/persistence.dart';
@@ -90,9 +90,29 @@ class _RecordListState extends State<RecordList> {
           },
           confirmDismiss: (direction) async {
             if (direction == DismissDirection.endToStart) {
-              setState(() {
-                currentRecordToModify = record;
-              });
+              await showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                builder: (context) {
+                  return RoundedModal(
+                    height: 500.0,
+                    colour: kActiveCardColour,
+                    child: RecordModification(
+                      record: record,
+                      onSave: (record) async {
+                        await Persistence().updateTrack(record);
+                        setState(() {
+                          widget.onDeleted();
+                        });
+                        Navigator.pop(context);
+                      },
+                      onDiscard: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  );
+                },
+              );
               return false;
             }
 
@@ -122,6 +142,7 @@ class _RecordListState extends State<RecordList> {
   @override
   Widget build(BuildContext context) {
     return Container(
+//      height: 400,
       child: AnimatedSwitcher(
         duration: Duration(milliseconds: 500),
         transitionBuilder: (Widget child, Animation<double> animation) =>

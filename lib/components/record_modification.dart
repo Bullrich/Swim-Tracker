@@ -45,11 +45,11 @@ class _RecordModificationState extends State<RecordModification> {
               "Edit record",
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 30,
+                fontSize: 20,
                 fontWeight: FontWeight.w900,
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 5),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -84,7 +84,7 @@ class _RecordModificationState extends State<RecordModification> {
             Text(
               "Date",
               style: TextStyle(
-                  fontWeight: FontWeight.w700, height: 2, fontSize: 25),
+                  fontWeight: FontWeight.w700, height: 2, fontSize: 15),
               textAlign: TextAlign.center,
             ),
             Row(
@@ -103,7 +103,7 @@ class _RecordModificationState extends State<RecordModification> {
                     onPressed: () {
                       DatePicker.showDateTimePicker(context,
                           showTitleActions: true,
-                          minTime: DateTime(2019, 3, 5),
+                          minTime: DateTime(2019, 11, 11),
                           maxTime: DateTime.now(), onConfirm: (date) {
                         setState(
                           () {
