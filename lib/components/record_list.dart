@@ -38,6 +38,8 @@ class _RecordListState extends State<RecordList> {
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = DateTime(now.year, now.month, now.day - 1);
 
+    widget.records.sort((a, b) => b.time.compareTo(a.time));
+
     for (var i = 0; i < widget.records.length; i++) {
       final record = widget.records[i];
       final date = DateTime.fromMillisecondsSinceEpoch(record.time);
