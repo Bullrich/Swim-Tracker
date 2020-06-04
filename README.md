@@ -2,6 +2,8 @@
 
 App where you can track how much you swam
 
+![Continuous testing](https://github.com/Bullrich/Swim-Tracker/workflows/Flutter%20CI/badge.svg?event=push)
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

@@ -32,7 +32,7 @@ class _TrackScreenState extends State<TrackScreen> {
   List<Widget> generate(int amount) {
     List<Widget> widgets = [];
     for (var i = 0; i < amount; i++) {
-      String entryNr = "Entry ${i}";
+      String entryNr = "Entry $i";
       widgets.add(
         Container(
           height: 50,
