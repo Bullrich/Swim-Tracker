@@ -100,17 +100,18 @@ class _RecordModificationState extends State<RecordModification> {
                     elevation: 6,
                     color: Colors.orangeAccent,
                     child: Icon(Icons.edit),
-                    onPressed: () {
-                      DatePicker.showDateTimePicker(context,
-                          showTitleActions: true,
-                          minTime: DateTime(2019, 11, 11),
-                          maxTime: DateTime.now(), onConfirm: (date) {
-                        setState(
-                          () {
-                            recordDate = date;
-                          },
-                        );
-                      }, currentTime: recordDate, locale: LocaleType.en);
+                    onPressed: () async {
+                      final date = await showDatePicker(
+                          context: this.context,
+                          initialDate: recordDate,
+                          firstDate: DateTime(2019, 11, 11),
+                          lastDate: DateTime.now(),
+                          locale: Locale.fromSubtags(languageCode: 'en'));
+                      setState(
+                        () {
+                          recordDate = date;
+                        },
+                      );
                     },
                   ),
                 )
